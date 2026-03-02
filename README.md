@@ -1,2 +1,0 @@
-# websitekaede.github.io
-website
