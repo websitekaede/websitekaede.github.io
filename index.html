@@ -1,475 +1,958 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worksheet toko Digital - Seru & Edukatif</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #FFD166;
-            --secondary-color: #06D6A0;
-            --accent-color: #EF476F;
-            --text-color: #2b2b2b;
-            --bg-color: #FFFDF7;
-            --white: #ffffff;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tkworksheet — Jasa Bikin Website 🖥️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    :root {
+      --black: #111111;
+      --dark:  #1e1e1e;
+      --mid:   #444444;
+      --gray:  #888888;
+      --silver:#c8c8c8;
+      --off:   #f3f3f3;
+      --white: #ffffff;
+      --accent: #111111;
+    }
 
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+    /* ─── GRAIN OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: .4;
+    }
 
-        /* --- HEADER --- */
-        header {
-            background-color: var(--white);
-            padding: 12px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    /* ─── KEYFRAMES ─── */
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+    @keyframes marquee  { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    @keyframes float    { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-12px) rotate(2deg)} }
+    @keyframes wiggle   { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg)} }
+    @keyframes pop      { 0%{transform:scale(1)} 50%{transform:scale(1.15)} 100%{transform:scale(1)} }
+    @keyframes blink    { 0%,100%{opacity:1} 49%{opacity:1} 50%,99%{opacity:0} }
+    @keyframes slideBar { from{transform:translateX(-100%)} to{transform:translateX(0)} }
 
-        .logo {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: var(--accent-color);
-        }
+    /* WORD REVEAL */
+    .wr { display:block; overflow:hidden; }
+    .wr > span {
+      display:block;
+      transform:translateY(105%);
+      transition:transform .75s cubic-bezier(.22,1,.36,1), opacity .5s ease;
+      opacity:0;
+    }
+    .wr.on > span { transform:translateY(0); opacity:1; }
+    .wr.d1>span{transition-delay:.1s} .wr.d2>span{transition-delay:.2s}
+    .wr.d3>span{transition-delay:.32s} .wr.d4>span{transition-delay:.44s}
 
-        .btn-instagram {
-            background-color: #E1306C;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            transition: transform 0.2s;
-        }
+    /* SCROLL FADE-UP */
+    .au { opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+    .au.on { opacity:1; transform:translateY(0); }
+    .au.d1{transition-delay:.08s} .au.d2{transition-delay:.16s}
+    .au.d3{transition-delay:.24s} .au.d4{transition-delay:.32s}
+    .au.d5{transition-delay:.4s}
 
-        .btn-instagram:hover {
-            transform: scale(1.05);
-        }
+    /* ─── STICKER FLOATERS ─── */
+    .sticker {
+      position:absolute; pointer-events:none; user-select:none;
+      font-size:clamp(28px,4vw,52px);
+      animation:float 4s ease-in-out infinite;
+    }
+    .sticker.s1{top:14%;right:8%;animation-delay:0s}
+    .sticker.s2{top:60%;right:12%;animation-delay:1s;font-size:clamp(22px,3vw,38px)}
+    .sticker.s3{top:30%;left:4%;animation-delay:2s;font-size:clamp(18px,2.5vw,32px)}
 
-        /* --- HERO SECTION --- */
-        .hero {
-            display: flex;
-            flex-direction: column-reverse;
-            align-items: center;
-            padding: 3rem 5%;
-            text-align: center;
-            background: linear-gradient(180deg, #FFFDF7 0%, #fff 100%);
-        }
+    /* ─── NAV ─── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:22px 48px;
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--off);
+      animation:fadeIn .8s ease both;
+      transition:transform .4s;
+    }
+    .nav-logo {
+      font-family:'Nunito',sans-serif; font-weight:700;
+      font-size:22px; letter-spacing:-0.3px;
+      color:var(--black); text-decoration:none;
+    }
+    .nav-logo span { color:var(--gray); }
+    .nav-links { display:flex; gap:32px; list-style:none; }
+    .nav-links a {
+      font-size:13px; font-weight:400;
+      color:var(--gray); text-decoration:none;
+      transition:color .25s;
+    }
+    .nav-links a:hover { color:var(--black); }
+    .nav-pill {
+      font-size:13px; font-weight:600;
+      color:var(--white); background:var(--black);
+      padding:10px 24px; border-radius:999px;
+      text-decoration:none;
+      transition:transform .2s, background .2s;
+    }
+    .nav-pill:hover { transform:scale(1.05); background:var(--mid); }
 
-        .hero-content {
-            flex: 1;
-            padding: 1rem;
-        }
+    /* ─── HERO ─── */
+    .hero {
+      min-height:100vh;
+      display:flex; flex-direction:column; justify-content:center;
+      padding:130px 48px 80px;
+      position:relative; overflow:hidden;
+      background:var(--white);
+    }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px; font-weight:500;
+      background:var(--off); border:1px solid var(--silver);
+      padding:7px 16px; border-radius:999px;
+      color:var(--gray); margin-bottom:28px;
+      animation:fadeUp .7s ease .2s both;
+      width:fit-content;
+    }
+    .hero-eyebrow .dot { width:7px;height:7px;background:#111;border-radius:50%;animation:blink 1.4s infinite; }
 
-        .hero h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-        }
+    .hero-h1 {
+      font-family:'Nunito',sans-serif; font-weight:700;
+      font-size:clamp(40px, 6.5vw, 96px);
+      line-height:1.02; letter-spacing:-0.5px;
+      color:var(--black); max-width:880px;
+      position:relative; z-index:1;
+    }
+    .hero-h1 .outline {
+      
+      
+    }
+    .hero-h1 .wavy {
+      display:inline-block;
+      position:relative;
+    }
+    .hero-h1 .wavy::after {
+      content:'';
+      position:absolute; bottom:-6px; left:0; right:0; height:4px;
+      background:var(--black);
+      border-radius:2px;
+      animation:slideBar .8s cubic-bezier(.22,1,.36,1) 1s both;
+    }
 
-        .hero p {
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            color: #666;
-        }
+    .hero-sub {
+      font-size:16px; line-height:1.7; color:var(--gray);
+      max-width:380px; margin-top:36px;
+      animation:fadeUp .8s ease .85s both;
+    }
+    .hero-sub strong { color:var(--black); font-weight:500; }
 
-        .hero-image {
-            flex: 1;
-            width: 100%;
-            max-width: 450px;
-            margin-bottom: 1.5rem;
-        }
+    .hero-cta-row {
+      display:flex; align-items:center; gap:16px;
+      margin-top:44px;
+      animation:fadeUp .8s ease 1.05s both;
+    }
+    .btn-black {
+      font-size:14px; font-weight:600;
+      background:var(--black); color:var(--white);
+      padding:15px 36px; border-radius:999px;
+      text-decoration:none;
+      transition:transform .2s, background .2s;
+      display:inline-block;
+    }
+    .btn-black:hover { transform:translateY(-2px); background:var(--mid); }
+    .btn-ghost {
+      font-size:14px; font-weight:500;
+      color:var(--black); border:1.5px solid var(--silver);
+      padding:14px 32px; border-radius:999px;
+      text-decoration:none;
+      transition:border-color .2s, transform .2s;
+      display:inline-block;
+    }
+    .btn-ghost:hover { border-color:var(--black); transform:translateY(-2px); }
 
-        .hero-image img {
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
+    .hero-note {
+      font-size:12px; color:var(--silver); margin-top:20px;
+      animation:fadeIn 1s ease 1.4s both;
+      font-style:italic;
+    }
 
-        /* --- TOMBOL UTAMA --- */
-        .btn-lynk {
-            display: inline-block;
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 14px 35px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            box-shadow: 0 5px 15px rgba(6, 214, 160, 0.4);
-            transition: all 0.3s ease;
-            width: 100%;
-            max-width: 280px;
-        }
+    /* ─── POSTER IMAGE BAR ─── */
+    .poster-bar {
+      padding:60px 0;
+      background:var(--off);
+      overflow:hidden;
+      position:relative;
+    }
+    .poster-bar-title {
+      font-family:'Nunito',sans-serif; font-weight:700;
+      font-size:13px; letter-spacing:0.5px; text-transform:uppercase;
+      color:var(--gray); text-align:center; margin-bottom:32px;
+    }
+    .poster-track-wrap { overflow:hidden; }
+    .poster-track {
+      display:flex; gap:20px;
+      width:max-content;
+      animation:marquee 28s linear infinite;
+    }
+    .poster-track:hover { animation-play-state:paused; }
+    .poster-card {
+      width:280px; height:180px;
+      border-radius:20px;
+      position:relative; overflow:hidden;
+      flex-shrink:0;
+      border:2px solid var(--white);
+      box-shadow:0 4px 24px rgba(0,0,0,.06);
+      transition:transform .3s, box-shadow .3s;
+    }
+    .poster-card:hover { transform:scale(1.04) rotate(-1deg); box-shadow:0 12px 40px rgba(0,0,0,.14); }
+    /* Simulated poster designs using CSS art */
+    .poster-card .pc-inner {
+      width:100%; height:100%;
+      display:flex; flex-direction:column;
+      justify-content:flex-end; padding:20px;
+      position:relative; overflow:hidden;
+    }
+    .pc-tag  { font-family:'Nunito',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:6px; opacity:.7; }
+    .pc-name { font-family:'Nunito',sans-serif; font-size:18px; font-weight:700; line-height:1.1; }
+    .pc-sub  { font-size:11px; margin-top:4px; opacity:.6; }
 
-        .btn-lynk:hover {
-            background-color: #05b58a;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(6, 214, 160, 0.6);
-        }
+    /* poster themes */
+    .p1 { background:linear-gradient(135deg,#1a1a1a 0%,#3a3a3a 100%); color:#fff; }
+    .p1 .shape { position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1); }
+    .p1 .shape2{ position:absolute;top:20px;right:20px;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.04); }
 
-        /* --- FITUR PRODUK --- */
-        .features {
-            padding: 3rem 5%;
-            background-color: white;
-            text-align: center;
-        }
+    .p2 { background:#f3f3f3; color:#111; }
+    .p2 .shape { position:absolute;top:0;right:0;width:180px;height:180px;background:linear-gradient(135deg,#e0e0e0,#f8f8f8);border-radius:0 0 0 100%; }
+    .p2 .shape2{ position:absolute;top:16px;right:16px;width:40px;height:40px;border:2px solid #ccc;border-radius:50%; }
 
-        .features h2 {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            color: var(--text-color);
-        }
+    .p3 { background:#111; color:#fff; }
+    .p3 .shape { position:absolute;top:0;left:0;right:0;height:100%;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(255,255,255,.02) 10px,rgba(255,255,255,.02) 20px); }
+    .p3 .shape2{ position:absolute;top:16px;right:16px;font-size:48px;opacity:.12; content:'W'; font-family:'Nunito',sans-serif;font-weight:700;}
 
-        .feature-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
+    .p4 { background:linear-gradient(160deg,#f8f8f8 0%,#e8e8e8 100%); color:#111; }
+    .p4 .shape { position:absolute;bottom:-20px;right:-20px;width:120px;height:120px;border:3px solid #ccc;border-radius:50%; }
+    .p4 .shape2{ position:absolute;top:20px;left:20px;width:36px;height:3px;background:#111; }
 
-        .feature-card {
-            background: #f9f9f9;
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 2px solid #eee;
-        }
+    .p5 { background:#1e1e1e; color:#fff; }
+    .p5 .shape { position:absolute;top:-40px;left:-40px;width:160px;height:160px;border:2px solid rgba(255,255,255,.08);border-radius:50%; }
+    .p5 .shape2{ position:absolute;bottom:0;right:0;width:80px;height:80px;background:rgba(255,255,255,.04);border-radius:50% 0 0 0; }
 
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.8rem;
-        }
+    .p6 { background:#fff; color:#111; border:2px solid #e0e0e0 !important; }
+    .p6 .shape { position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 19px,#f0f0f0 19px,#f0f0f0 20px); }
+    .p6 .shape2{ position:absolute;top:16px;right:16px;width:32px;height:32px;background:#111;border-radius:4px; }
 
-        /* --- CARA PENGGUNAAN --- */
-        .cara-usage {
-            padding: 3rem 5%;
-            background-color: var(--secondary-color);
-            color: white;
-            text-align: center;
-        }
+    /* ─── MARQUEE STRIP ─── */
+    .strip {
+      background:var(--black); padding:18px 0; overflow:hidden;
+    }
+    .strip-track { display:flex; width:max-content; animation:marquee 18s linear infinite; }
+    .strip-item {
+      font-family:'Nunito',sans-serif; font-size:15px; font-weight:600;
+      letter-spacing:1px; color:var(--white);
+      padding:0 40px; white-space:nowrap;
+      display:flex; align-items:center; gap:40px;
+    }
+    .strip-item::after { content:'✦'; font-size:10px; color:var(--gray); }
 
-        .cara-usage h2 {
-            margin-bottom: 2rem;
-            font-size: 1.8rem;
-        }
+    /* ─── SECTION BASE ─── */
+    section { padding:100px 48px; }
+    .sec-tag {
+      display:inline-block; font-size:11px; font-weight:600;
+      letter-spacing:0.5px; text-transform:uppercase;
+      background:var(--off); border:1px solid var(--silver);
+      padding:6px 14px; border-radius:999px; color:var(--gray);
+      margin-bottom:20px;
+    }
+    .sec-h {
+      font-family:'Nunito',sans-serif; font-weight:700;
+      font-size:clamp(28px,3.8vw,52px);
+      line-height:1.15; letter-spacing:-0.2px; color:var(--black);
+    }
 
-        .steps-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
+    /* ─── LAYANAN ─── */
+    .layanan { background:var(--white); }
+    .srv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:56px; }
+    .srv-card {
+      padding:36px 32px;
+      border:1.5px solid var(--off);
+      border-radius:24px;
+      transition:border-color .3s, transform .3s, box-shadow .3s;
+      position:relative; overflow:hidden;
+    }
+    .srv-card:hover {
+      border-color:var(--black);
+      transform:translateY(-4px);
+      box-shadow:0 16px 48px rgba(0,0,0,.08);
+    }
+    .srv-emoji { font-size:32px; margin-bottom:20px; display:block; }
+    .srv-num { font-size:11px; letter-spacing:0.5px; color:var(--silver); margin-bottom:10px; font-weight:500; }
+    .srv-name { font-family:'Nunito',sans-serif; font-size:20px; font-weight:700; color:var(--black); margin-bottom:10px; }
+    .srv-desc { font-size:13.5px; line-height:1.65; color:var(--gray); }
+    .srv-card .corner-tag {
+      position:absolute; top:20px; right:20px;
+      font-size:10px; background:var(--off); color:var(--gray);
+      padding:4px 10px; border-radius:999px; border:1px solid var(--silver);
+    }
 
-        .step-card {
-            background: rgba(255,255,255,0.2);
-            padding: 1.5rem;
-            border-radius: 15px;
-            text-align: left;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-        }
+    /* ─── KENAPA PILIH ─── */
+    .kenapa { background:var(--black); color:var(--white); }
+    .kenapa .sec-h { color:var(--white); }
+    .kenapa .sec-tag { background:#1e1e1e; border-color:#333; color:var(--gray); }
+    .kenapa-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; margin-top:56px; }
+    .kp-item {
+      padding:44px 40px;
+      background:#161616;
+      transition:background .3s;
+    }
+    .kp-item:hover { background:#1c1c1c; }
+    .kp-num { font-family:'Nunito',sans-serif; font-size:48px; font-weight:700; color:#2a2a2a; line-height:1; margin-bottom:16px; }
+    .kp-title { font-family:'Nunito',sans-serif; font-size:20px; font-weight:700; color:var(--white); margin-bottom:10px; }
+    .kp-desc { font-size:14px; line-height:1.65; color:var(--gray); }
 
-        .step-number {
-            background: var(--white);
-            color: var(--secondary-color);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
+    /* ─── HARGA ─── */
+    .harga { background:var(--off); }
+    .harga-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:56px; }
+    .harga-card {
+      background:var(--white);
+      border-radius:24px;
+      padding:40px 36px;
+      border:1.5px solid transparent;
+      transition:border-color .3s, transform .35s cubic-bezier(.22,1,.36,1), box-shadow .3s;
+      position:relative;
+    }
+    .harga-card:hover { border-color:var(--black); transform:translateY(-6px); box-shadow:0 20px 60px rgba(0,0,0,.09); }
+    .harga-card.feat { background:var(--black); }
+    .harga-card.feat .h-name,
+    .harga-card.feat .h-price,
+    .harga-card.feat .h-per,
+    .harga-card.feat .h-feat { color:var(--white); }
+    .harga-card.feat .h-feat { border-color:#222; }
+    .harga-card.feat .h-btn { background:var(--white); color:var(--black); }
+    .harga-card.feat .h-btn:hover { background:var(--off); }
+    .h-badge { display:inline-block; font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; background:var(--gray); color:var(--white); padding:5px 12px; border-radius:999px; margin-bottom:20px; }
+    .h-name  { font-family:'Nunito',sans-serif; font-weight:700; font-size:14px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray); margin-bottom:20px; }
+    .h-price { font-family:'Nunito',sans-serif; font-weight:700; font-size:46px; color:var(--black); line-height:1; letter-spacing:-0.5px; }
+    .h-per   { font-size:12px; color:var(--gray); margin-bottom:32px; }
+    .h-feats { list-style:none; margin-bottom:36px; }
+    .h-feat  { font-size:13px; color:var(--mid); padding:10px 0; border-bottom:1px solid var(--off); display:flex; align-items:center; gap:10px; }
+    .h-feat::before { content:'✓'; font-weight:600; color:var(--black); flex-shrink:0; font-size:12px; }
+    .harga-card.feat .h-feat::before { color:var(--white); }
+    .h-btn {
+      display:block; text-align:center;
+      font-size:13px; font-weight:600;
+      color:var(--white); background:var(--black);
+      padding:14px; border-radius:999px;
+      text-decoration:none; transition:transform .2s, background .2s;
+    }
+    .h-btn:hover { transform:translateY(-2px); background:var(--mid); }
 
-        .step-content h3 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
+    /* ─── TESTI ─── */
+    .testi { background:var(--white); }
+    .testi-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:56px; }
+    .testi-card {
+      padding:36px;
+      border-radius:24px;
+      border:1.5px solid var(--off);
+      transition:border-color .3s, transform .3s;
+      position:relative;
+    }
+    .testi-card:hover { border-color:var(--silver); transform:translateY(-3px); }
+    .testi-stars { font-size:16px; margin-bottom:16px; letter-spacing:0.5px; }
+    .testi-q { font-size:15px; line-height:1.7; color:var(--mid); font-style:italic; margin-bottom:24px; }
+    .testi-q::before { content:'"'; font-size:40px; line-height:0; vertical-align:-14px; color:var(--silver); margin-right:4px; }
+    .testi-auth { display:flex; align-items:center; gap:12px; }
+    .testi-av { width:42px; height:42px; border-radius:50%; background:var(--off); display:flex; align-items:center; justify-content:center; font-size:18px; border:1.5px solid var(--silver); }
+    .testi-name { font-family:'Nunito',sans-serif; font-weight:700; font-size:14px; color:var(--black); }
+    .testi-role { font-size:11px; color:var(--silver); }
 
-        .step-content p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
+    /* ─── FAQ ─── */
+    .faq { background:var(--off); }
+    .faq-list { margin-top:56px; display:flex; flex-direction:column; gap:12px; max-width:760px; }
+    .faq-item {
+      background:var(--white);
+      border-radius:20px;
+      border:1.5px solid var(--off);
+      overflow:hidden;
+      transition:border-color .3s;
+    }
+    .faq-item:hover { border-color:var(--silver); }
+    .faq-q {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:22px 28px; cursor:pointer;
+      font-family:'Nunito',sans-serif; font-weight:600; font-size:15px; color:var(--black);
+      user-select:none;
+    }
+    .faq-icon { font-size:20px; transition:transform .3s; flex-shrink:0; }
+    .faq-item.open .faq-icon { transform:rotate(45deg); }
+    .faq-a {
+      max-height:0; overflow:hidden;
+      transition:max-height .4s ease, padding .3s;
+      font-size:14px; color:var(--gray); line-height:1.7;
+      padding:0 28px;
+    }
+    .faq-item.open .faq-a { max-height:200px; padding:0 28px 22px; }
 
-        /* --- GALERI --- */
-        .gallery {
-            padding: 3rem 5%;
-            text-align: center;
-        }
+    /* ─── CTA ─── */
+    .cta-section {
+      background:var(--black);
+      padding:120px 48px;
+      text-align:center; position:relative; overflow:hidden;
+    }
+    .cta-section::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse at center, #1e1e1e 0%, #0d0d0d 70%);
+    }
+    .cta-section > * { position:relative; z-index:1; }
+    .cta-emoji { font-size:56px; margin-bottom:24px; display:block; animation:wiggle 2s ease-in-out infinite; }
+    .cta-h {
+      font-family:'Nunito',sans-serif; font-weight:700;
+      font-size:clamp(32px,5vw,68px);
+      color:var(--white); line-height:1.2; letter-spacing:-0.2px;
+      margin-bottom:24px;
+    }
+    .cta-h .outline {   }
+    .cta-sub { font-size:16px; color:var(--gray); margin-bottom:44px; line-height:1.6; }
+    .cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+    .btn-wa {
+      font-size:14px; font-weight:600;
+      background:var(--white); color:var(--black);
+      padding:16px 40px; border-radius:999px;
+      text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+      transition:transform .2s, background .2s;
+    }
+    .btn-wa:hover { transform:translateY(-2px) scale(1.03); background:var(--off); }
+    .btn-ig {
+      font-size:14px; font-weight:600;
+      background:transparent; color:var(--white);
+      padding:15px 36px; border-radius:999px;
+      border:1.5px solid #333;
+      text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+      transition:border-color .2s, transform .2s;
+    }
+    .btn-ig:hover { border-color:var(--white); transform:translateY(-2px); }
 
-        .gallery h2 {
-            margin-bottom: 1.5rem;
-        }
+    /* ─── FOOTER ─── */
+    footer {
+      background:var(--black);
+      border-top:1px solid #1a1a1a;
+      padding:52px 48px 32px;
+    }
+    .ft-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:48px; flex-wrap:wrap; gap:32px; }
+    .ft-logo { font-family:'Nunito',sans-serif; font-weight:700; font-size:28px; letter-spacing:0px; color:var(--white); text-decoration:none; }
+    .ft-logo span { color:var(--gray); }
+    .ft-sub { font-size:13px; color:var(--gray); margin-top:6px; font-style:italic; }
+    .ft-cols { display:flex; gap:60px; }
+    .ft-col-h { font-size:11px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; color:var(--gray); margin-bottom:18px; }
+    .ft-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .ft-links a { font-size:14px; color:#555; text-decoration:none; transition:color .2s; }
+    .ft-links a:hover { color:var(--white); }
+    .ft-bot { display:flex; justify-content:space-between; align-items:center; padding-top:24px; border-top:1px solid #1a1a1a; font-size:12px; color:#444; flex-wrap:wrap; gap:8px; }
+    .ft-made { font-style:italic; }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 3px solid var(--primary-color);
-        }
-
-        /* --- KEUNTUNGAN --- */
-        .benefits {
-            padding: 3rem 5%;
-            background-color: #fff;
-            text-align: center;
-        }
-
-        .benefits h2 {
-            margin-bottom: 2rem;
-            font-size: 1.8rem;
-        }
-
-        .benefit-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-align: left;
-            padding: 1rem;
-            background: var(--bg-color);
-            border-radius: 10px;
-        }
-
-        .benefit-icon {
-            font-size: 2rem;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            background-color: var(--text-color);
-            color: white;
-            padding: 2.5rem 5%;
-            text-align: center;
-        }
-
-        .footer-cta {
-            margin-bottom: 1.5rem;
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (min-width: 768px) {
-            .hero {
-                flex-direction: row;
-                text-align: left;
-                height: auto;
-                min-height: 85vh;
-                padding: 4rem 5%;
-                align-items: center;
-            }
-            
-            .hero h1 {
-                font-size: 3rem;
-            }
-
-            .feature-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .steps-container {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .benefit-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .btn-lynk {
-                width: auto;
-            }
-            
-            header {
-                padding: 10px 5%;
-            }
-        }
-    </style>
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:900px){
+      nav { padding:18px 24px; }
+      .nav-links { display:none; }
+      section, .cta-section { padding:72px 24px; }
+      .hero { padding:110px 24px 60px; }
+      .srv-grid, .harga-grid { grid-template-columns:1fr; }
+      .kenapa-grid { grid-template-columns:1fr; gap:2px; }
+      .testi-grid { grid-template-columns:1fr; }
+      .ft-top { flex-direction:column; }
+      .ft-cols { gap:32px; flex-wrap:wrap; }
+      .cta-btns { flex-direction:column; align-items:center; }
+      .hero-h1 { font-size:clamp(44px,12vw,80px); }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- NAVIGASI -->
-    <header>
-        <div class="logo">TKworksheet.store</div>
-        <a href="https://www.instagram.com/tkworksheet.store/" target="_blank" class="btn-instagram">
-            Instagram Kami
-        </a>
-    </header>
+  <!-- NAV -->
+  <nav id="mainNav">
+    <a href="#" class="nav-logo">tk<span>worksheet</span></a>
+    <ul class="nav-links">
+      <li><a href="#layanan">Layanan</a></li>
+      <li><a href="#harga">Harga</a></li>
+      <li><a href="#testi">Testi</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#cta" class="nav-pill">💬 Hubungi Aku</a>
+  </nav>
 
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Belajar Jadi Seru!<br>Worksheet Anak Digital</h1>
-            <p>Media belajar interaktif yang menarik untuk anak usia dini. Bisa dicetak (print) atau digunakan langsung di tablet. Tingkatkan kemampuan motorik dan kognitif buah hati Anda hari ini!</p>
-            
-            <a href="https://lynk.id/tkworksheet" target="_blank" class="btn-lynk">
-                Dapatkan Worksheet Sekarang
-            </a>
-            <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.7;">*Klik untuk melihat harga & paket</p>
-        </div>
-        <div class="hero-image">
-            <img src="gambar1.jpg" alt="gambar">
-        </div>
-    </section>
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <!-- floating stickers -->
+    <div class="sticker s1">💻</div>
+    <div class="sticker s2">⚡</div>
+    <div class="sticker s3">🎨</div>
 
-    <!-- FITUR -->
-    <section class="features">
-        <h2>Kenapa Memilih Produk Kami?</h2>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🎨</div>
-                <h3>Desain Menarik</h3>
-                <p>Desain warna-warni yang menarik perhatian anak dan membuat mereka semangat belajar.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>Digital & Printable</h3>
-                <p>Bisa digunakan di tablet atau dicetak (print) dengan kertas biasa.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🧠</div>
-                <h3>Materi Lengkap</h3>
-                <p>Mencakup materi anak (Huruf, Angka, Mewarnai, Logika, dan Motorik Halus).</p>
-            </div>
-        </div>
-    </section>
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Buka order · Fast response · Harga pelajar
+    </div>
 
-    <!-- CARA PENGGUNAAN -->
-    <section class="cara-usage">
-        <h2>📖 Cara Menggunakan Worksheet</h2>
-        <div class="steps-container">
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <div class="step-content">
-                    <h3>Unduh File</h3>
-                    <p>Klik tombol untuk menuju lama pembelian apa lynk, lalu dapatkan link google drive setelah pembelian.</p>
-                </div>
-            </div>
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <div class="step-content">
-                    <h3>Cetak atau Buka</h3>
-                    <p>Cetak (print) di kertas kosong atau buka file di tablet/iPad anak.</p>
-                </div>
-            </div>
-            <div class="step-card">
-                <div class="step-number">3</div>
-                <div class="step-content">
-                    <h3>Ajak Anak Belajar</h3>
-                    <p>Dampingi anak saat mengerjakan worksheet dengan cara yang menyenangkan.</p>
-                </div>
-            </div>
-            <div class="step-card">
-                <div class="step-number">4</div>
-                <div class="step-content">
-                    <h3>Ulangi Sesuai Keinginan</h3>
-                    <p>File bisa dicetak berkali-kali, jadi anak bisa mengulang materi kapan saja.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <h1 class="hero-h1">
+      <span class="wr"><span>Mau punya</span></span>
+      <span class="wr d1"><span><span class="outline">website</span></span></span>
+      <span class="wr d2"><span>keren? <span class="wavy">Gas!</span></span></span>
+    </h1>
 
-    <!-- GALERI -->
-    <section class="gallery">
-        <h2>Preview Worksheet</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="https://placehold.co/300x200/06D6A0/white?text=Materi+Angka" alt="Preview 1"></div>
-            <div class="gallery-item"><img src="https://placehold.co/300x200/EF476F/white?text=pengenalan+Huruf" alt="Preview 2"></div>
-            <div class="gallery-item"><img src="https://placehold.co/300x200/118AB2/white?text=mewarnai+gambar" alt="Preview 3"></div>
-            <div class="gallery-item"><img src="https://placehold.co/300x200/FFD166/white?text=ilmu+pengetahuan+alam" alt="Preview 4"></div>
-        </div>
-    </section>
+    <p class="hero-sub">
+      Halo! Aku pelajar yang hobi coding 👋<br>
+      Aku bantu kamu bikin website yang <strong>kece, cepet, dan ga bikin kantong bolong</strong> — mulai dari landing page sampai coding microcontroler sederhana.
+    </p>
 
-    <!-- KEUNTUNGAN -->
-    <section class="benefits">
-        <h2>✨ Keunggulan Produk Ini</h2>
-        <div class="benefit-grid">
-            <div class="benefit-item">
-                <div class="benefit-icon">⏰</div>
-                <div>
-                    <h3>Akses Selifetime</h3>
-                    <p>File bisa diakses kapan saja tanpa batas waktu</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <div class="benefit-icon">♻️</div>
-                <div>
-                    <h3>Cetak Ulang Gratis</h3>
-                    <p>Siap cetak ulang sebanyak yang dibutuhkan</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <div class="benefit-icon">💼</div>
-                <div>
-                    <h3>Siap Pakai</h3>
-                    <p>Tidak perlu edit, langsung bisa digunakan</p>
-                </div>
-            </div>
-            <div class="benefit-item">
-                <div class="benefit-icon">🎁</div>
-                <div>
-                    <h3>Bonus Tambahan</h3>
-                    <p>Dapatkan template educative gratis</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="hero-cta-row">
+      <a href="https://wa.me/6287713143220" class="btn-black">💬 Chat Sekarang</a>
+      <a href="#layanan" class="btn-ghost">Lihat Layanan ↓</a>
+    </div>
+    <div class="hero-note">✦ Konsultasi gratis, ga ada yang maksa ✦</div>
+  </section>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-cta">
-            <h2>Siap membantu buah hati belajar?</h2>
-            <p style="margin-bottom: 20px;">Dapatkan worksheet terbaik untuk anak Anda sekarang!</p>
-            
-            <a href="https://lynk.id/tkworksheet" target="_blank" class="btn-lynk">
-                Beli Sekarang di Lynk
-            </a>
-        </div>
-        
-        <hr style="border-color: #555; margin: 20px 0;">
-        
-        <p>Ikuti kami untuk tips belajar anak:</p>
-        <a href="https://www.instagram.com/tkworksheet.store/" style="color: var(--primary-color); font-weight: bold; font-size: 1.2rem;">
-            @tkworksheet.store
-        </a>
-        <br><br>
-        <small>&copy; 2026 TKworksheet.store</small>
-    </footer>
+  <!-- STRIP 1 -->
+  <div class="strip">
+    <div class="strip-track">
+      <div class="strip-item">Landing Page</div>
+      <div class="strip-item">Company Profile</div>
+      <div class="strip-item">Toko Online</div>
+      <div class="strip-item">Portfolio</div>
+      <div class="strip-item">Web App</div>
+      <div class="strip-item">Redesign</div>
+      <div class="strip-item">Landing Page</div>
+      <div class="strip-item">Company Profile</div>
+      <div class="strip-item">Toko Online</div>
+      <div class="strip-item">Portfolio</div>
+      <div class="strip-item">Web App</div>
+      <div class="strip-item">Redesign</div>
+    </div>
+  </div>
 
+  <!-- POSTER IMAGE BAR -->
+  <div class="poster-bar">
+    <div class="poster-bar-title au">jasa buat website sederhana dan coding arduino</div>
+    <div class="poster-track-wrap">
+      <div class="poster-track">
+
+        <!-- Poster 1 -->
+        <div class="poster-card">
+          <div class="pc-inner p1">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag">Paket Starter</div>
+            <div class="pc-name">Landing Page<br>Mulai 100k</div>
+            <div class="pc-sub">tkworksheet - simple</div>
+          </div>
+        </div>
+
+        <!-- Poster 2 -->
+        <div class="poster-card">
+          <div class="pc-inner p2">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag">Toko Online</div>
+            <div class="pc-name">Jualan Makin<br>Mudah Online</div>
+            <div class="pc-sub">tkworksheet - Harga pelajar</div>
+          </div>
+        </div>
+
+        <!-- Poster 3 -->
+        <div class="poster-card">
+          <div class="pc-inner p3">
+            <div class="shape"></div>
+            <div style="position:absolute;top:16px;right:20px;font-size:42px;opacity:.12;font-family:'Nunito',sans-serif;font-weight:700;">W</div>
+            <div class="pc-tag">Promo Spesial</div>
+            <div class="pc-name">Gratis Revisi<br>sepuasnya untuk kamu!</div>
+            <div class="pc-sub">tkworksheet - DM sekarang</div>
+          </div>
+        </div>
+
+        <!-- Poster 4 -->
+        <div class="poster-card">
+          <div class="pc-inner p4">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag">Company Profile</div>
+            <div class="pc-name">Website Bisnis<br>Tampil Pro 💼</div>
+            <div class="pc-sub">tkworksheet - profesional</div>
+          </div>
+        </div>
+
+        <!-- Poster 5 -->
+        <div class="poster-card">
+          <div class="pc-inner p5">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag">Portfolio</div>
+            <div class="pc-name">Karya kamu<br>layak dipajang ✨</div>
+            <div class="pc-sub">tkworksheet - keren</div>
+          </div>
+        </div>
+
+        <!-- Poster 6 -->
+        <div class="poster-card">
+          <div class="pc-inner p6">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag" style="color:#111">Fast Order</div>
+            <div class="pc-name" style="color:#111">Selesai dalam<br>1-4 hari kerja</div>
+            <div class="pc-sub" style="color:#555">tkworksheet · On time!</div>
+          </div>
+        </div>
+
+        <!-- Duplicate for loop -->
+        <!-- Poster 1 -->
+        <div class="poster-card">
+          <div class="pc-inner p1">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag">Paket Starter</div>
+            <div class="pc-name">Landing Page<br>Mulai 100k</div>
+            <div class="pc-sub">tkworksheet - simple</div>
+          </div>
+        </div>
+
+        <!-- Poster 2 -->
+        <div class="poster-card">
+          <div class="pc-inner p2">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag">Toko Online</div>
+            <div class="pc-name">Jualan Makin<br>Mudah Online</div>
+            <div class="pc-sub">tkworksheet - Harga pelajar</div>
+          </div>
+        </div>
+
+        <!-- Poster 3 -->
+        <div class="poster-card">
+          <div class="pc-inner p3">
+            <div class="shape"></div>
+            <div style="position:absolute;top:16px;right:20px;font-size:42px;opacity:.12;font-family:'Nunito',sans-serif;font-weight:700;">W</div>
+            <div class="pc-tag">Promo Spesial</div>
+            <div class="pc-name">Gratis Revisi<br>sepuasnya untuk kamu!</div>
+            <div class="pc-sub">tkworksheet - DM sekarang</div>
+          </div>
+        </div>
+
+        <!-- Poster 4 -->
+        <div class="poster-card">
+          <div class="pc-inner p4">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag">Company Profile</div>
+            <div class="pc-name">Website Bisnis<br>Tampil Pro 💼</div>
+            <div class="pc-sub">tkworksheet - profesional</div>
+          </div>
+        </div>
+
+        <!-- Poster 5 -->
+        <div class="poster-card">
+          <div class="pc-inner p5">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag">Portfolio</div>
+            <div class="pc-name">Karya kamu<br>layak dipajang ✨</div>
+            <div class="pc-sub">tkworksheet - keren</div>
+          </div>
+        </div>
+
+        <!-- Poster 6 -->
+        <div class="poster-card">
+          <div class="pc-inner p6">
+            <div class="shape"></div><div class="shape2"></div>
+            <div class="pc-tag" style="color:#111">Fast Order</div>
+            <div class="pc-name" style="color:#111">Selesai dalam<br>1-4 hari kerja</div>
+            <div class="pc-sub" style="color:#555">tkworksheet · On time!</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYANAN -->
+  <section class="layanan" id="layanan">
+    <div class="sec-tag au">🛠️ Layanan</div>
+    <h2 class="sec-h">
+      <span class="wr"><span>Aku bisa</span></span>
+      <span class="wr d1"><span>bikin apa aja?</span></span>
+    </h2>
+    <div class="srv-grid">
+      <div class="srv-card au d1">
+        <span class="srv-emoji">🚀</span>
+        <div class="srv-num">01</div>
+        <div class="srv-name">personal branding site</div>
+        <p class="srv-desc">cocok buat kamu yang mau personal branding di jenjang karier.</p>
+        <span class="corner-tag">1–2 hari</span>
+      </div>
+      <div class="srv-card au d2">
+        <span class="srv-emoji">🏢</span>
+        <div class="srv-num">02</div>
+        <div class="srv-name">Company Profile</div>
+        <p class="srv-desc">website itu penting untuk branding bisnis.</p>
+        <span class="corner-tag">1-2 hari</span>
+      </div>
+      <div class="srv-card au d3">
+        <span class="srv-emoji">🛒</span>
+        <div class="srv-num">03</div>
+        <div class="srv-name">Toko Online</div>
+        <p class="srv-desc">Mau jualan online? Aku buatin toko dengan keranjang belanja dan payment gateway sederhana.</p>
+        <span class="corner-tag">2-3 hari</span>
+      </div>
+      <div class="srv-card au d1">
+        <span class="srv-emoji">🎨</span>
+        <div class="srv-num">04</div>
+        <div class="srv-name">Portfolio</div>
+        <p class="srv-desc">Buat fotografer, desainer, atau siapapun yang berada di industri kreatif.</p>
+        <span class="corner-tag">2-3 hari</span>
+      </div>
+      <div class="srv-card au d2">
+        <span class="srv-emoji">🔧</span>
+        <div class="srv-num">05</div>
+        <div class="srv-name">custom web</div>
+        <p class="srv-desc">jasa pembuatan website custom sesuai keinginanmu.</p>
+        <span class="corner-tag">custom</span>
+      </div>
+      <div class="srv-card au d3">
+        <span class="srv-emoji">⚙️</span>
+        <div class="srv-num">06</div>
+        <div class="srv-name">setting</div>
+        <p class="srv-desc">penjelasan tentang website gratis di lynk.id.</p>
+        <span class="corner-tag">free</span>
+      </div>
+      <div class="srv-card au d1">
+        <span class="srv-emoji">🤖</span>
+        <div class="srv-num">07</div>
+        <div class="srv-name">Coding Arduino</div>
+        <p class="srv-desc">Butuh kode buat project Arduino? Sensor, LED, servo, LCD, IoT — aku bantuin dari sketch sampai jalan beneran.</p>
+        <span class="corner-tag">custom</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- KENAPA PILIH -->
+  <section class="kenapa">
+    <div class="sec-tag au">⚡ Kenapa Pilih Aku</div>
+    <h2 class="sec-h">
+      <span class="wr"><span>Emang apa</span></span>
+      <span class="wr d1"><span>bedanya?</span></span>
+    </h2>
+    <div class="kenapa-grid">
+      <div class="kp-item au">
+        <div class="kp-num">01</div>
+        <div class="kp-title">💰 Harga murah</div>
+        <p class="kp-desc">ya murah sih menurutku.</p>
+      </div>
+      <div class="kp-item au d1">
+        <div class="kp-num">02</div>
+        <div class="kp-title">🔄 Revisi Sampai Puas</div>
+        <p class="kp-desc">Selagi masih wajar, revisi sebanyak apapun bakal di kerjain.</p>
+      </div>
+      <div class="kp-item au d2">
+        <div class="kp-num">03</div>
+        <div class="kp-title">⚡ Respon Cepet</div>
+        <p class="kp-desc">fast respon selama bukan jam sekolah.</p>
+      </div>
+      <div class="kp-item au d3">
+        <div class="kp-num">04</div>
+        <div class="kp-title">📦 penjelasan Lengkap</div>
+        <p class="kp-desc">ada ebook gratis tentang cara penggunaan.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HARGA -->
+  <section class="harga" id="harga">
+    <div class="sec-tag au">💸 Harga</div>
+    <h2 class="sec-h">
+      <span class="wr"><span>Mau yang</span></span>
+      <span class="wr d1"><span>mana dulu?</span></span>
+    </h2>
+    <div class="harga-grid">
+      <div class="harga-card au d1">
+        <div class="h-name">basic 🌱</div>
+        <div class="h-price">100k</div>
+        <div class="h-per">mulai dari</div>
+        <ul class="h-feats">
+          <li class="h-feat">Landing Page 1 halaman</li>
+          <li class="h-feat">Mobile friendly</li>
+          <li class="h-feat">Form kontak / WA</li>
+          <li class="h-feat">free revisi sepuasnya</li>
+        </ul>
+        <a href="#cta" class="h-btn">Mau ini! 🙋</a>
+      </div>
+      <div class="harga-card feat au d2">
+        <div class="h-badge">Popular</div>
+        <div class="h-name">Arduino 🤖</div>
+        <div class="h-price">50k</div>
+        <div class="h-per">mulai dari</div>
+        <ul class="h-feats">
+          <li class="h-feat">Sketch Arduino custom</li>
+          <li class="h-feat">Sensor, LED, Servo, LCD</li>
+          <li class="h-feat">Bisa request fitur IoT</li>
+          <li class="h-feat">Revisi sampai jalan</li>
+        </ul>
+        <a href="#cta" class="h-btn">Order sekarang! ⚡</a>
+      </div>
+      <div class="harga-card au d3">
+        <div class="h-name">Custom 🛠️</div>
+        <div class="h-price">Nego</div>
+        <div class="h-per">diskusi dulu ya</div>
+        <ul class="h-feats">
+          <li class="h-feat">Toko online / Web</li>
+          <li class="h-feat">Fitur custom sesuai kebutuhan</li>
+          <li class="h-feat">Payment gateway</li>
+          <li class="h-feat">Revisi unlimited</li>
+        </ul>
+        <a href="#cta" class="h-btn">Yuk diskusi dulu 💬</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIP 2 -->
+  <div class="strip">
+    <div class="strip-track" style="animation-direction:reverse">
+      <div class="strip-item">Desain Kece</div>
+      <div class="strip-item">Harga Terjangkau</div>
+      <div class="strip-item">Revisi Sampai Puas</div>
+      <div class="strip-item">Fast Response</div>
+      <div class="strip-item">On Time Delivery</div>
+      <div class="strip-item">Konsultasi Gratis</div>
+      <div class="strip-item">Coding Arduino</div>
+      <div class="strip-item">Desain Kece</div>
+      <div class="strip-item">Harga Terjangkau</div>
+      <div class="strip-item">Revisi Sampai Puas</div>
+      <div class="strip-item">Fast Response</div>
+      <div class="strip-item">On Time Delivery</div>
+      <div class="strip-item">Konsultasi Gratis</div>
+      <div class="strip-item">Coding Arduino</div>
+    </div>
+  </div>
+
+  <!-- TESTI -->
+  <section class="testi" id="testi">
+    <div class="sec-tag au">🗣️ Testi Klien</div>
+    <h2 class="sec-h">
+      <span class="wr"><span>Kata mereka</span></span>
+      <span class="wr d1"><span>yang udah order 😊</span></span>
+    </h2>
+    <div class="testi-grid">
+      <div class="testi-card au">
+        <div class="testi-stars"></div>
+        <p class="testi-q"></p>
+        <div class="testi-auth">
+          <div class="testi-av"></div>
+          <div>
+            <div class="testi-name"></div>
+            <div class="testi-role"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="sec-tag au">❓ FAQ</div>
+    <h2 class="sec-h">
+      <span class="wr"><span>Pertanyaan</span></span>
+      <span class="wr d1"><span>yang sering ditanya</span></span>
+    </h2>
+    <div class="faq-list au">
+      <div class="faq-item">
+        <div class="faq-q">Bayarnya gimana? <span class="faq-icon">+</span></div>
+        <div class="faq-a">bayar setelah website selesai dibuat, nanti diarahin kok di chat</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Berapa lama waktu pengerjaannya? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Tergantung paket — Landing Page bisa 1–2 hari</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Kalau ga suka hasilnya gimana? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Tenang, ada revisi kok!. Dan aku bakal dengerin masukan kamu dari awal supaya ga meleset.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Aku ga ngerti teknologi, bisa ga? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Bisa banget! Aku bakal ajarin cara pake website kamu sampai bisa mandiri. Ada tutorial juga yang aku kasih. Santai aja 😄</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Bisa bantu project Arduino / tugas sekolah? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Bisa! Dari project sederhana kayak lampu LED sampai yang lebih kompleks kayak sensor suhu, servo, atau IoT. Chat dulu aja jelasin kebutuhannya 🤖</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section" id="cta">
+    <span class="cta-emoji">👋</span>
+    <h2 class="cta-h">
+      <span class="wr"><span>Yuk, mulai</span></span>
+      <span class="wr d1"><span>bikin <span class="outline">website</span></span></span>
+      <span class="wr d2"><span>kamu sekarang!</span></span>
+    </h2>
+    <p class="cta-sub au" style="transition-delay:.5s">Konsultasi ke aku dulu ya 😊<br>Mau bikin website atau coding Arduino? Chat langsung via WhatsApp atau DM Instagram ya!</p>
+    <div class="cta-btns au" style="transition-delay:.65s">
+      <a href="https://wa.me/6287713143220" class="btn-wa">💬 Chat WhatsApp</a>
+      <a href="https://instagram.com/tkworksheet.store" class="btn-ig">📸 DM Instagram</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="ft-top">
+      <div>
+        <a href="#" class="ft-logo">tkworksheet<span>.store</span></a>
+        <div class="ft-sub">Jasa bikin website oleh pelajar, untuk semua orang ✨</div>
+      </div>
+      <div class="ft-cols">
+        <div>
+          <a href="https://lynk.id/webbyku" target="_blank" class="h-btn" style="display:inline-block;padding:14px 28px;font-size:13px;font-weight:600;text-decoration:none;">📘 E-Book Gratis</a>
+        </div>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <span>web yang dibuat oleh anak sekolahan</span>
+      <span class="ft-made">tkworksheet - Balikpapan</span>
+    </div>
+  </footer>
+
+  <script>
+    /* ── SCROLL OBSERVER ── */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('on'); });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.wr, .au').forEach(el => io.observe(el));
+
+    /* trigger hero on load */
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.hero .wr').forEach(el => el.classList.add('on'));
+      setTimeout(() => {
+        document.querySelectorAll('.hero .au').forEach(el => el.classList.add('on'));
+      }, 500);
+    });
+
+    /* ── NAV HIDE ── */
+    let lastY = 0;
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      nav.style.transform = (y > 80 && y > lastY) ? 'translateY(-100%)' : 'translateY(0)';
+      lastY = y;
+    });
+
+    /* ── FAQ ACCORDION ── */
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  </script>
 </body>
 </html>
